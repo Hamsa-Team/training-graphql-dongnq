@@ -1,0 +1,35 @@
+{
+  "name": "training-graphql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server/server.js",
+  "scripts": {
+    "dev": "nodemon server/server.js",
+    "build": "next build",
+    "start": "NODE_ENV=production nodemon server/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/client": "^3.1.1",
+    "@apollo/react-hooks": "^4.0.0",
+    "apollo-server": "^2.16.1",
+    "apollo-server-koa": "^2.16.1",
+    "axios": "^0.19.2",
+    "bcrypt": "^5.0.0",
+    "dotenv": "^8.2.0",
+    "graphql": "^15.3.0",
+    "koa": "^2.13.0",
+    "koa-body": "^4.2.0",
+    "koa-mongo": "^1.9.1",
+    "koa-router": "^9.1.0",
+    "koa-session": "^6.0.0",
+    "mongodb": "^3.5.9",
+    "next": "^9.5.0",
+    "next-apollo": "^4.0.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  }
+}
