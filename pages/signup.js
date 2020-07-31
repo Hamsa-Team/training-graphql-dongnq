@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Router from 'next/router';
 
-export default class Login extends React.Component {
+export default class Signup extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -22,7 +22,7 @@ export default class Login extends React.Component {
     onSubmit = async () => {
         try {
             const loginQuery = await axios({
-                url: 'http://localhost:3000/graphql',
+                url: constants.GRAPHQL_URL,
                 method: 'POST',
                 data: {
                     query: `
