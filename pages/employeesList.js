@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { gql } from '@apollo/client';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import axios from 'axios';
 
 const GET_EMPLOYEES = gql`
     query {
@@ -29,7 +28,7 @@ const CRAWL_EMPLOYEES = gql`
 const Employees = () => {
     const [employees, setEmployees] = useState([]);
     const [crawlEmployees, { data: crawlData }] = useMutation(CRAWL_EMPLOYEES);
-    const { loading, error, data: employessData } = useQuery(GET_EMPLOYEES); // using useQuery
+    const { loading, error, data: employessData } = useQuery(GET_EMPLOYEES);
     useEffect(() => {
         if (employessData) {
             setEmployees(employessData.employees);
@@ -38,25 +37,6 @@ const Employees = () => {
             setEmployees(crawlData.crawlEmployees);
         }
     })
-
-    // const getEmployees = async () => {
-    //     const callGraphQL = await axios({
-    //         url: 'http://localhost:3000/graphql',
-    //         method: 'POST',
-    //         data: {
-    //             query: `
-    //                 query employees {
-    //                     employees {
-    //                         employee_name
-    //                         employee_age
-    //                         employee_salary
-    //                         profile_image
-    //                 }
-    //             }`
-    //         }
-    //     });
-    //     setEmployees(callGraphQL.data.data.employees);
-    // }
 
     const crawlEmployeesData = useCallback(
         () => crawlEmployees()
@@ -86,7 +66,6 @@ const Employees = () => {
 
     return (
         <div>
-            {/* <button onClick={getEmployees}>Get Employees</button> */}
             <button onClick={crawlEmployeesData}>Crawl Employees</button>
             <table>
                 <thead>

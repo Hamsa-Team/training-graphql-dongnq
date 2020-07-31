@@ -1,10 +1,11 @@
 import React from 'react';
 import App from 'next/app';
 import { ApolloClient, InMemoryCache} from '@apollo/client';
-import { ApolloProvider } from '@apollo/react-hooks';
+import { ApolloProvider } from 'react-apollo';
+import constants from '../core/constants';
 
 const client = new ApolloClient({
-    uri: 'http://localhost:3000/graphql',
+    uri: constants.GRAPHQL_URL,
     cache: new InMemoryCache()
 })
 

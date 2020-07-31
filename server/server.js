@@ -11,15 +11,7 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
-const graphQLServer = new ApolloServer({
-    typeDefs: typeDefs,
-    resolvers: resolvers,
-    playground: {
-        endpoint: "/graphql"
-    },
-    bodyParser: true,
-    context: ({ ctx }) => ctx
-});
+
 const app = next({ dev: true });
 const handle = app.getRequestHandler();
 const router = new Router();
@@ -29,7 +21,12 @@ server.keys = ['koa'];
 (async () => {
     try {
         await app.prepare();
-        graphQLServer.applyMiddleware({ app: server });
+        server.use(Mongo({
+            host: process.env.DB_HOST,
+            port: process.env.DB_PORT,
+            db: process.env.DB_NAME
+        }))
+            .use(KoaBody({ multipart: true }))
 
         router.get('(.*)', async (ctx) => {
             if (!ctx.path.match(/graphql/)) {
@@ -38,13 +35,18 @@ server.keys = ['koa'];
             }
         });
 
-        server.use(Mongo({
-            host: process.env.DB_HOST,
-            port: process.env.DB_PORT,
-            db: process.env.DB_NAME
-        }))
-            .use(KoaBody({ multipart: true }))
-            .use(router.routes())
+        const graphQLServer = new ApolloServer({
+            typeDefs: typeDefs,
+            resolvers: resolvers,
+            playground: {
+                endpoint: "/graphql"
+            },
+            bodyParser: true,
+            context: ({ ctx }) => ctx
+        });
+        graphQLServer.applyMiddleware({ app: server });
+
+        server.use(router.routes())
             .listen(process.env.PORT, () => {
                 console.log(`server running at ${process.env.PORT}`);
             });

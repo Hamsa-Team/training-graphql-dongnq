@@ -1,6 +1,21 @@
 import React from 'react';
 import axios from 'axios';
 import Router from 'next/router';
+import constants from "../core/constants";
+import { Mutation } from 'react-apollo';
+import { gql } from 'apollo-boost';
+
+const LOGIN_MUTATION = gql`
+                mutation login($username: String, $password: String) {
+                            login(user: {
+                                username: $username,
+                                password: $password
+                            }) {
+                                username
+                                password
+                        }
+                    }
+`;
 
 export default class Login extends React.Component {
     constructor(props) {
@@ -21,7 +36,7 @@ export default class Login extends React.Component {
     onSubmit = async () => {
         try {
             const loginQuery = await axios({
-                url: 'http://localhost:3000/graphql',
+                url: constants.GRAPHQL_URL,
                 method: 'POST',
                 data: {
                     query: `
@@ -54,19 +69,30 @@ export default class Login extends React.Component {
     render = () => {
         const { username, password, errorMessage } = this.state;
 
-        return (
-            <div>
-                <span>Username: </span> <input type="text" value={username} onChange={e => this.onChange('username', e)} />
-                <br />
-                <br />
-                <span>Password: </span> <input type="text" value={password} onChange={e => this.onChange('password', e)} />
-                <br />
-                <br />
-                <button onClick={this.onSubmit}>Login</button>
-                <br />
-                <br />
-                <p style={{ color: "red" }}>{errorMessage ? errorMessage : null}</p>
-            </div>
-        );
+        return <Mutation mutation={LOGIN_MUTATION}>
+            {
+                (onSubmit, { loading, error, data }) => {
+                    return (
+                        <from
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                onSubmit({ variables: { username: username, password: password } })
+                            }}
+                        >
+                            <span>Username: </span> <input type="text" value={username} onChange={e => this.onChange('username', e)} />
+                            <br />
+                            <br />
+                            <span>Password: </span> <input type="text" value={password} onChange={e => this.onChange('password', e)} />
+                            <br />
+                            <br />
+                            <button type="submit">Login</button>
+                            <br />
+                            <br />
+                            <p style={{ color: "red" }}>{errorMessage ? errorMessage : null}</p>
+                        </from>
+                    )
+                }
+            }
+        </Mutation>
     }
 }
